@@ -37,7 +37,7 @@ public class Visualizer {
 		}
 		StdDraw.show(0);
 		try {
-			TimeUnit.MILLISECONDS.sleep(300);
+			TimeUnit.MILLISECONDS.sleep(30);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
@@ -62,7 +62,7 @@ public class Visualizer {
 		}
 		StdDraw.show(0);
 		try {
-			TimeUnit.MILLISECONDS.sleep(300);
+			TimeUnit.MILLISECONDS.sleep(30);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}

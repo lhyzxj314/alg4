@@ -2,6 +2,19 @@ package search;
 
 import java.util.NoSuchElementException;
 
+import edu.princeton.cs.algs4.Queue;
+import edu.princeton.cs.algs4.StdIn;
+import edu.princeton.cs.algs4.StdOut;
+
+/**
+ * 二叉搜索树
+ * 
+ * @author xiaojun
+ * @version 1.0.0
+ * @param <Key>
+ * @param <Value>
+ * @date 2017年4月29日
+ */
 public class BST<Key extends Comparable<Key>, Value> {
 	private Node root;
 
@@ -17,8 +30,15 @@ public class BST<Key extends Comparable<Key>, Value> {
 			this.val = val;
 			this.N = N;
 		}
+		
+		public String toString() {
+			return key.toString();
+		}
 	}
 
+	/* ********************************************** 
+	 * 符号表基本操作
+	 ************************************************/
 	public int size() {
 		return size(root);
 	}
@@ -31,8 +51,8 @@ public class BST<Key extends Comparable<Key>, Value> {
 		root = put(root, key, val);
 	}
 
-	/*
-	 * ********************************************** 有序性相关操作
+	/* ********************************************** 
+	 * 有序性相关操作
 	 ************************************************/
 	public Key max() {
 		return max(root).key;
@@ -63,24 +83,94 @@ public class BST<Key extends Comparable<Key>, Value> {
 	public int rank(Key key) {
 		return rank(root, key);
 	}
-	
+
 	public boolean isEmpty() {
-		if (size(root) == 0) return true;
+		if (size(root) == 0)
+			return true;
 		return false;
 	}
-	
+
 	public void deleteMin() {
 		if (isEmpty())
 			throw new NoSuchElementException("Symbol table underflow");
 		root = deleteMin(root);
 	}
-	
+
 	public void deleteMax() {
 		if (isEmpty())
 			throw new NoSuchElementException("Symbol table underflow");
 		root = deleteMax(root);
 	}
+
+	public void delete(Key key) {
+		root = delete(root, key);
+	}
+
+	/* ********************************************** 
+	 * 范围查找操作
+	 ************************************************/
+	public Iterable<Key> keys() {
+		return keys(min(), max());
+	}
+
+	public Iterable<Key> keys(Key lo, Key hi) {
+		Queue<Key> queue = new Queue<Key>();
+		keys(root, queue, lo, hi);
+		return queue;
+	}
 	
+	public Iterable<Key> levelOrder() {
+		Queue<Key> keys = new Queue<Key>();
+		Queue<Node> queue = new Queue<Node>();
+		queue.enqueue(root);
+		while (!queue.isEmpty()) {
+			Node x = queue.dequeue();
+			if (x == null) continue;
+			keys.enqueue(x.key);
+			queue.enqueue(x.left);
+			queue.enqueue(x.right);
+		}
+		return keys;
+	}
+
+	private void keys(Node node, Queue<Key> queue, Key lo, Key hi) {
+		if (node == null)
+			return;
+		if (node.key.compareTo(lo) < 0)
+			keys(node.right, queue, lo, hi);
+		else if (node.key.compareTo(hi) > 0)
+			keys(node.left, queue, lo, hi);
+		else {
+			queue.enqueue(node.key);
+			//FIXME
+			keys(node.left, queue, lo, hi);
+			keys(node.right, queue, lo, hi);
+		}
+	}
+
+	private Node delete(Node x, Key key) {
+		if (x == null)
+			return null;
+		int cmp = key.compareTo(x.key);
+		if (cmp < 0)
+			x.left = delete(x.left, key);
+		else if (cmp > 0)
+			x.right = delete(x.right, key);
+		else {
+			if (x.left == null)
+				return x.right;
+			if (x.right == null)
+				return x.left;
+
+			Node t = x;
+			x = min(x.right);
+			x.right = deleteMin(t.right);
+			x.left = t.left;
+		}
+		x.N = size(x.left) + size(x.right) + 1;
+		return x;
+	}
+
 	private Node deleteMax(Node node) {
 		if (node.right == null)
 			return node.left;
@@ -178,9 +268,9 @@ public class BST<Key extends Comparable<Key>, Value> {
 			return null;
 		int cmp = node.key.compareTo(key);
 		if (cmp < 0)
-			return get(node.left, key);
-		else if (cmp > 0)
 			return get(node.right, key);
+		else if (cmp > 0)
+			return get(node.left, key);
 		else
 			return node.val;
 	}
@@ -191,11 +281,12 @@ public class BST<Key extends Comparable<Key>, Value> {
 			return new Node(key, val, 1);
 		int cmp = node.key.compareTo(key);
 		if (cmp < 0)
-			node.left = put(node.left, key, val);
-		else if (cmp > 0)
 			node.right = put(node.right, key, val);
+		else if (cmp > 0)
+			node.left = put(node.left, key, val);
 		else
 			node.val = val;
+		node.N = size(node.left) + size(node.right) + 1;
 		return node;
 	}
 
@@ -204,6 +295,29 @@ public class BST<Key extends Comparable<Key>, Value> {
 			return 0;
 		else
 			return x.N;
+	}
+
+	/**
+	 * Unit tests the <tt>BST</tt> data type.
+	 */
+	public static void main(String[] args) {
+		edu.princeton.cs.algs4.BST<String, Integer> st = new edu.princeton.cs.algs4.BST<String, Integer>();
+		for (int i = 0; !StdIn.isEmpty(); i++) {
+			String key = StdIn.readString();
+			st.put(key, i);
+		}
+	
+		for (String s : st.levelOrder())
+			StdOut.println(s + " " + st.get(s));
+		
+		StdOut.println();
+		
+		for (String s : st.keys("b", "e"))
+			StdOut.println(s + " " + st.get(s));
+		
+		StdOut.println();
+		
+		System.out.println(st.floor("f"));
 	}
 
 }
