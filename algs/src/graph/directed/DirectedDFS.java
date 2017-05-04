@@ -1,5 +1,10 @@
 package graph.directed;
 
+/**
+ * 有向图的可达性
+ * @author xshrimp
+ * 2017年5月4日
+ */
 public class DirectedDFS {
   private boolean[] marked;
   
