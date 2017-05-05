@@ -5,12 +5,12 @@ package graph.directed;
  * 
  * @author xshrimp 2017年5月4日
  */
-public class KosarajuCC {
+public class KosarajuSCC {
   private boolean[] marked;
   private int[] id;
   private int count;
 
-  public KosarajuCC(Digraph G) {
+  public KosarajuSCC(Digraph G) {
     marked = new boolean[G.V()];
     id = new int[G.V()];
     // Kosaraju算法：使用G的反向图的逆后序遍历顺序进行dfs，每次新的递归调用是一个强连通分量

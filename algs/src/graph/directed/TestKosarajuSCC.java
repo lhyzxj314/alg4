@@ -6,13 +6,13 @@ import java.util.List;
 import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.StdOut;
 
-public class TestKosarajuCC {
+public class TestKosarajuSCC {
   
   public static void main(String[] args) {
     Digraph G = new Digraph(new In(args[0]));
     StdOut.println(G);
     
-    KosarajuCC cc = new KosarajuCC(G);
+    KosarajuSCC cc = new KosarajuSCC(G);
     
     int m = cc.count();
     StdOut.println("有强连通分量" + m + "个");
