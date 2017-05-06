@@ -6,7 +6,7 @@ import edu.princeton.cs.algs4.StdOut;
 public class TestMST {
   public static void main(String[] args) {
     EdgeWeightedGraph G = new EdgeWeightedGraph(new In(args[0]));
-    PrimMST prim = new PrimMST(G);
+    KruskalMST prim = new KruskalMST(G);
     
     for (Edge e : prim.edges())
       StdOut.println(e);
